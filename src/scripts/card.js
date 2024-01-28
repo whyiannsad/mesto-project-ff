@@ -1,5 +1,5 @@
 // @todo: Функция создания карточки
-function addCard(cardValue, remove, likeCard, imageOpen) {
+function createCard(cardValue, remove, likeCard, openImage) {
     const cardTemplate = document.querySelector('#card-template').content;
     const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
     const deleteButton = cardElement.querySelector('.card__delete-button');
@@ -11,7 +11,7 @@ function addCard(cardValue, remove, likeCard, imageOpen) {
     cardElement.querySelector('.card__image').src = cardValue.link;
     const imageClick = cardElement.querySelector('.card__image');
     imageClick.addEventListener('click', () => {
-        imageOpen(cardValue);
+        openImage(cardValue);
     })
     
     return cardElement;
@@ -27,4 +27,4 @@ function likeCard (evt) {
     evt.target.classList.toggle('card__like-button_is-active');
 }
 
-export {addCard, deleteCard, likeCard};
+export {createCard, deleteCard, likeCard};

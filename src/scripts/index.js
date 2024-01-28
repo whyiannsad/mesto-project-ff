@@ -1,6 +1,6 @@
 import "../pages/index.css";
 import { initialCards } from "./cards.js"
-import { addCard, deleteCard, likeCard} from "./card.js"
+import { createCard, deleteCard, likeCard} from "./card.js"
 import { openPopup, closePopup} from "./modal.js"
 
 
@@ -11,7 +11,7 @@ const cardList = document.querySelector('.places__list');
 //Вывод карточек
 function renderList() {
 	initialCards.forEach((cardValue) => {
-		cardList.append(addCard(cardValue, deleteCard, likeCard, imageOpen));
+		cardList.append(createCard(cardValue, deleteCard, likeCard, openImage));
 	});
 }
 renderList();
@@ -72,7 +72,7 @@ const addForm = addPopup.querySelector(".popup__form");
 function addFormSubmit(evt) {
 	evt.preventDefault();
 	const cardValue = { name: addInputName.value, link: addInputUrl.value};
-	cardList.prepend(addCard(cardValue, deleteCard, likeCard, imageOpen));
+	cardList.prepend(createCard(cardValue, deleteCard, likeCard, openImage));
 	addForm.reset();
 	closePopup(addPopup);
 }
@@ -86,7 +86,7 @@ const imageCard = imagePopup.querySelector('.popup__image');
 const imageCaption = imagePopup.querySelector('.popup__caption');
 
 //Открытие
-function imageOpen(cardValue) {
+function openImage(cardValue) {
 	imageCaption.textContent = cardValue.name;
 	imageCard.alt = cardValue.name;
 	imageCard.src = cardValue.link;

@@ -68,6 +68,7 @@ function editFormSubmit(evt) {
 	.then(() => {
 		profileTitle.textContent = editNameInput.value;
 		profileDescription.textContent = editDescriptionInput.value;
+		closePopup(editPopup);
 	})
 	.catch((error) => {
 		console.log(error);
@@ -75,7 +76,6 @@ function editFormSubmit(evt) {
 	.finally(() => {
 		editPopupSaveButton.textContent = 'Сохранение';
 	})
-	closePopup(editPopup);
 }
 
 const editForm = editPopup.querySelector(".popup__form");
@@ -107,6 +107,7 @@ function avatarFormSubmit(evt) {
 	changeUserImage(avatarInput.value)
 	.then(() => {
 		profileImage.style = `background-image: url('${avatarInput.value}')`;
+		closePopup(avatarPopup)
 	})
 	.catch((error) => {
 		console.log(error);
@@ -114,7 +115,6 @@ function avatarFormSubmit(evt) {
 	.finally(() => {
 		avatarPopupSaveButton.textContent = 'Сохранение';
 	})
-	closePopup(avatarPopup)
 }
 
 avatarForm.addEventListener('submit', avatarFormSubmit);
@@ -149,6 +149,8 @@ function addFormSubmit(evt) {
 	postCard(addInputName.value, addInputUrl.value)
 	.then((cardValue) => {
 		placesList.prepend(createCard(cardValue, userId, deleteCard, likeCard, openImage));
+		addForm.reset();
+	closePopup(addPopup);
 	})
 	.catch((error) => {
 		console.log(error);
@@ -156,8 +158,6 @@ function addFormSubmit(evt) {
 	.finally(() => {
 		addPopupSaveButton.textContent = 'Сохранить';
 	})
-	addForm.reset();
-	closePopup(addPopup);
 }
 
 addForm.addEventListener('submit', addFormSubmit);

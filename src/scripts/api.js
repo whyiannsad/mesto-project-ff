@@ -89,7 +89,7 @@ export function postCard(placeName, placeLink) {
 }
 
 
-export function removeCard(cardId) {
+export function deleteCard(cardId) {
     return fetch(`${config.baseUrl}/cards/${cardId}`, {
         method: 'DELETE',
         headers: config.headers,

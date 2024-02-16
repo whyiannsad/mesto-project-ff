@@ -1,5 +1,5 @@
 import "../pages/index.css";
-import { createCard, deleteCard, likeCard} from "./card.js"
+import { createCard, removeCard, likeCard} from "./card.js"
 import { openPopup, closePopup} from "./modal.js"
 import { enableValidation, clearValidation } from './validation.js';
 import { getInitialCards, getUserData, changeUserData, changeUserImage, postCard } from './api.js'
@@ -7,7 +7,7 @@ import { getInitialCards, getUserData, changeUserData, changeUserImage, postCard
 
 // DOM узлы 
 const content = document.querySelector('.content');
-const cardList = document.querySelector('.places__list');
+const placesList = document.querySelector('.places__list');
 let userId;
 
 //Валидации форм
@@ -20,30 +20,16 @@ const validationConfig = {
 	errorClass: 'popup__error_visible'
 };
 
-//Валидация
-enableValidation(validationConfig);
-
-//Вывод карточек
-Promise.all([getInitialCards(), getUserData()])
-.then(([initialCardsData, userData]) => {
-	userId = userData._id;
-	profileTitle.textContent = userData.name;
-	profileDescription.textContent = userData.about;
-	profileImage.style = `background-image: url('${userData.avatar}')`
-
-	initialCardsData.forEach((cardValue) => {
-		placesList.append(createCard(cardValue, userId, removeCard, likeCard, openImage));
-	})
-})
-
 //Константы редактирования
 const editButtonOpen = document.querySelector('.profile__edit-button');
 const editPopup = document.querySelector('.popup_type_edit');
-const editInputName = document.querySelector(".popup__input_type_name");
-const editInputDescription = document.querySelector(".popup__input_type_description");
+const editButtonClose = editPopup.querySelector('.popup__close');
+const editForm = document.forms['edit-profile'];
+const editInputName = editForm.elements['name'];
+const editInputDescription = editForm.elements['description'];
 const profileTitle = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
-const editPopupSaveButton = editForm.querySelector('.popup__button');
+const editPopupSaveButton = editButtonOpen.querySelector('.popup__button');
 
 //Открытие
 editButtonOpen.addEventListener('click', function() {
@@ -53,21 +39,19 @@ editButtonOpen.addEventListener('click', function() {
 	clearValidation(editForm, validationConfig);
 });
 
-const editButtonClose = editPopup.querySelector('.popup__close');
-
 //Закрытие
 editButtonClose.addEventListener('click', function() {
 	closePopup(editPopup);
 });
 
 //Редактировать профиль
-function editFormSubmit(evt) {
-	evt.preventDefault();
+function editFormSubmit(event) {
+	event.preventDefault();
 	editPopupSaveButton.textContent = 'Сохранение...';
-	changeUserData(editNameInput.value, editDescriptionInput.value)
+	changeUserData(editInputName.value, editInputDescription.value)
 	.then(() => {
-		profileTitle.textContent = editNameInput.value;
-		profileDescription.textContent = editDescriptionInput.value;
+		profileTitle.textContent = editInputName.value;
+		profileDescription.textContent = editInputDescription.value;
 		closePopup(editPopup);
 	})
 	.catch((error) => {
@@ -77,8 +61,6 @@ function editFormSubmit(evt) {
 		editPopupSaveButton.textContent = 'Сохранение';
 	})
 }
-
-const editForm = editPopup.querySelector(".popup__form");
 
 editForm.addEventListener('submit', editFormSubmit);
 
@@ -100,8 +82,8 @@ avatarCloseButton.addEventListener('click', () => {
 	closePopup(avatarPopup);
 })
 
-function avatarFormSubmit(evt) {
-	evt.preventDefault();
+function avatarFormSubmit(event) {
+	event.preventDefault();
 	avatarPopupSaveButton.textContent = 'Сохранить...';
 
 	changeUserImage(avatarInput.value)
@@ -122,9 +104,11 @@ avatarForm.addEventListener('submit', avatarFormSubmit);
 //Константы добавления
 const addPopup = document.querySelector('.popup_type_new-card');
 const addButtonOpen = document.querySelector('.profile__add-button');
-const addInputName = document.querySelector(".popup__input_type_card-name");
-const addInputUrl = document.querySelector(".popup__input_type_url");
-const addPopupSaveButton = addForm.querySelector('.popup__button');
+const addForm = document.forms['new-place'];
+const addInputName = addForm.elements['place-name'];
+const addInputUrl = addForm.elements['link'];
+const addPopupSaveButton = addPopup.querySelector('.popup__button');
+const addButtonClose = addPopup.querySelector('.popup__close');
 
 //Открытие
 addButtonOpen.addEventListener('click', function() {
@@ -133,22 +117,18 @@ addButtonOpen.addEventListener('click', function() {
 	clearValidation(addForm, validationConfig);
 });
 
-const addButtonClose = addPopup.querySelector('.popup__close');
-
 //Закрытие
 addButtonClose.addEventListener('click', function() {
 	closePopup(addPopup);
 });
 
-const addForm = addPopup.querySelector(".popup__form");
-
-function addFormSubmit(evt) {
-	evt.preventDefault();
+function addFormSubmit(event) {
+	event.preventDefault();
 	addPopupSaveButton.textContent = 'Сохранение...';
 
 	postCard(addInputName.value, addInputUrl.value)
 	.then((cardValue) => {
-		placesList.prepend(createCard(cardValue, userId, deleteCard, likeCard, openImage));
+		placesList.prepend(createCard(cardValue, userId, removeCard, likeCard, openImage));
 		addForm.reset();
 	closePopup(addPopup);
 	})
@@ -179,4 +159,23 @@ function openImage(cardValue) {
 //Закрытие
 imageButtonClose.addEventListener('click', function() {
 	closePopup(imagePopup);
+})
+
+//Валидация
+enableValidation(validationConfig);
+
+//Вывод карточек
+Promise.all([getInitialCards(), getUserData()])
+.then(([initialCardsData, userData]) => {
+	userId = userData._id;
+	profileTitle.textContent = userData.name;
+	profileDescription.textContent = userData.about;
+	profileImage.style = `background-image: url('${userData.avatar}')`
+
+	initialCardsData.forEach((cardValue) => {
+		placesList.append(createCard(cardValue, userId, removeCard, likeCard, openImage));
+	})
+})
+.catch((error) => {
+	console.log(error);
 })

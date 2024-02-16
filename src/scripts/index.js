@@ -29,7 +29,7 @@ const editInputName = editForm.elements['name'];
 const editInputDescription = editForm.elements['description'];
 const profileTitle = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
-const editPopupSaveButton = editButtonOpen.querySelector('.popup__button');
+const editPopupSaveButton = editForm.querySelector('.popup__button');
 
 //Открытие
 editButtonOpen.addEventListener('click', function() {
@@ -84,7 +84,7 @@ avatarCloseButton.addEventListener('click', () => {
 
 function avatarFormSubmit(event) {
 	event.preventDefault();
-	avatarPopupSaveButton.textContent = 'Сохранить...';
+	avatarPopupSaveButton.textContent = 'Сохранение...';
 
 	changeUserImage(avatarInput.value)
 	.then(() => {
@@ -130,7 +130,7 @@ function addFormSubmit(event) {
 	.then((cardValue) => {
 		placesList.prepend(createCard(cardValue, userId, removeCard, likeCard, openImage));
 		addForm.reset();
-	closePopup(addPopup);
+		closePopup(addPopup);
 	})
 	.catch((error) => {
 		console.log(error);

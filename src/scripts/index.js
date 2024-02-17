@@ -88,7 +88,7 @@ function avatarFormSubmit(event) {
 
 	changeUserImage(avatarInput.value)
 	.then((data) => {
-		profileImage.style = data.link;
+		profileImage.style.backgroundImage = `url(${data.link})`;
 		closePopup(avatarPopup)
 	})
 	.catch((error) => {

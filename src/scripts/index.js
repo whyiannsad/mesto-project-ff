@@ -49,9 +49,9 @@ function editFormSubmit(event) {
 	event.preventDefault();
 	editPopupSaveButton.textContent = 'Сохранение...';
 	changeUserData(editInputName.value, editInputDescription.value)
-	.then(() => {
-		profileTitle.textContent = editInputName.value;
-		profileDescription.textContent = editInputDescription.value;
+	.then((data) => {
+		profileTitle.textContent = data.name;
+		profileDescription.textContent = data.description;
 		closePopup(editPopup);
 	})
 	.catch((error) => {
@@ -87,8 +87,8 @@ function avatarFormSubmit(event) {
 	avatarPopupSaveButton.textContent = 'Сохранение...';
 
 	changeUserImage(avatarInput.value)
-	.then(() => {
-		profileImage.style = `background-image: url('${avatarInput.value}')`;
+	.then((data) => {
+		profileImage.style = data.link;
 		closePopup(avatarPopup)
 	})
 	.catch((error) => {
